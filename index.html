@@ -2,10 +2,12 @@
     <head>
         <title>Simple Todo List in React</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0-alpha1/JSXTransformer.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0-alpha1/react.min.js"></script>
+        <script src="https://unpkg.com/react@15/dist/react.js"></script>
+        <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
     </head>
     <body>
-        <script type="text/JSX">
+        <div id="container"></div>
+        <script type="text/jsx">
             /* TODO APP */
             var TodoApp = React.createClass({
                 getInitialState: function(){
@@ -30,16 +32,68 @@
             });
 
             /* TODO BANNER & TODO LIST */
-            var TodoBanner = React.createClass({});
-            var TodoList = React.createClass({});
+            var TodoBanner = React.createClass({
+                render: function() {
+                    return (
+                        <h3>TODO List</h3>
+                    );
+                }
+            });
+            var TodoList = React.createClass({
+                render: function() {
+                    var createItem = function(item) {
+                        return (
+                            <TodoListItem key={item.key}>{item.text}</TodoListItem>
+                        );
+                    }
+                    return (
+                        <ul>
+                            {this.props.items.map(createItem)}
+                        </ul>
+                    )
+                }
+            });
 
             /* TODO LIST ITEM */
-            var TodoListItem = React.createClass({});
+            var TodoListItem = React.createClass({
+                render: function() {
+                    return (
+                        <li>{this.props.children}</li>
+                    );
+                }
+            });
 
             /* TODO FORM */
-            var TodoForm = React.createClass({});
+            var TodoForm = React.createClass({
+                getInitialState: function() {
+                    return {itemText: ''};
+                },
+                handleSubmit: function(e) {
+                    e.preventDefault();
+                    var newItem = {
+                        text: this.state.itemText,
+                        key: Date.now()
+                    };
+                    this.props.onFormSubmit(newItem);
+                    this.setState({itemText: ''});
+                    ReactDOM.findDOMNode(this.refs.item).focus();
+                },
+                onChange: function(e) {
+                    this.setState({
+                        itemText: e.target.value
+                    });
+                },
+                render: function() {
+                    return (
+                        <form onSubmit={this.handleSubmit}>
+                            <input type="text" ref="item" onChange={this.onChange} value={this.state.itemText} />
+                            <input type="submit" value="Add" />
+                        </form>
+                    );
+                }
+            });
 
-            React.render(<TodoApp />, document.body);
+            ReactDOM.render(<TodoApp />, document.getElementById('container'));
         </script>
     </body>
 </html>
