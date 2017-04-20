@@ -7,7 +7,27 @@
     <body>
         <script type="text/JSX">
             /* TODO APP */
-            var TodoApp = React.createClass({});
+            var TodoApp = React.createClass({
+                getInitialState: function(){
+                    return {
+                        items: []
+                    };
+                },
+                updateItems: function(newItem) {
+                    var allItems = this.state.items;
+                    allItems.push(newItem);
+                    this.setState({items: allItems});
+                },
+                render: function(){
+                    return (
+                        <div>
+                            <TodoBanner />
+                            <TodoList items={this.state.items} />
+                            <TodoForm onFormSubmit={this.updateItems} />
+                        </div>
+                    );
+                }
+            });
 
             /* TODO BANNER & TODO LIST */
             var TodoBanner = React.createClass({});
